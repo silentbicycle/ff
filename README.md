@@ -45,7 +45,7 @@ the `=`s specify a consecutive "iou" string.
 
 ## Usage ##
 
-    ff [-dilt] [-r root] query
+    ff [-dilt] [-c char] [-r root] query
     -c CHAR   char to toggle Consecutive match (default: '=')
     -d        show Dotfiles
     -i        case-Insensitive search

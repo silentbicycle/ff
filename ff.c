@@ -42,7 +42,7 @@ static int query_len = 0;
 static void usage() {
     fprintf(stderr,
         "fuzzy-finder, by Scott Vokes <vokes.s@gmail.com>\n"
-        "usage: ff [-dilt] [-r root] query\n"
+        "usage: ff [-dilt] [-c char] [-r root] query\n"
         "-c CHAR   char to toggle Consecutive match (default: '=')\n"
         "-d        show Dotfiles\n"
         "-i        case-Insensitive search\n"
