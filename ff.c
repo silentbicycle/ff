@@ -135,7 +135,7 @@ static void walk(const char *path, uint po,
 
     while ((dp = readdir(dir)) != NULL) {
         char *name = dp->d_name;
-        uint nlen = dp->d_namlen;
+        uint nlen = strlen(name);
 
         /* Skip empty names, dotfiles, and links. */
         if (nlen == 0) continue;
