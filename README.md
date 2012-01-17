@@ -8,17 +8,17 @@ cumbersome.
 [fc]: http://common-lisp.net/project/slime/doc/html/Fuzzy-Completion.html
 
 Searching for "aeiou" will print any paths that match the RE
-`.*a.*e.*i.*o.*u.*`. Any sections enclosed in '/'s will be required to
-match within the same path element, and the consecutive match character
-(default '=') toggles exact matching.
+`.*a.*e.*i.*o.*u.*`. 
 
 By default, `ff` searches recursively from your home directory, but its
 search root can be set with the `-r` option.
 
-`ff` query strings are *not* regular expressions - characters such as
-'.' and '-' have their normal meanings. I chose '=' for the consecutive
-match toggle character because it doesn't mean anything in basic REs and
-it's unshifted on most keyboards.
+`ff` query strings are not regular expressions - characters such as
+'.' and '-' match literally. Any sections enclosed in '/'s
+will be required to match within the same path element, and the
+consecutive match character (default '=') toggles exact matching.
+(I chose '=' because it doesn't mean anything in basic REs and it's
+unshifted on most keyboards.)
 
 See also: [compound-completion][cc]
 
@@ -30,6 +30,7 @@ See also: [compound-completion][cc]
 Just run make. I mean, it's one C file. The makefile is just `ff: ff.c`.
 Copy ff somewhere in your path.
 
+
 ## Example ##
 
 `ff aeiou` matches both `~/and/the/first/one/used.txt`
@@ -40,7 +41,7 @@ and `~/after_the_furious_ultimatum.txt`, because the characters 'a', 'e',
 each vowel to appear in its own directory element.
 
 `ff ae=iou=` would only match `~/after_the_furious_ultimatum.txt`, since
-the `=`s specify a consecutive "iou" string.
+it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" string.
 
 
 ## Usage ##
