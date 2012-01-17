@@ -49,6 +49,7 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
     ff [-dilt] [-c char] [-r root] query
     -c CHAR   char to toggle Consecutive match (default: '=')
     -d        show Dotfiles
+    -h        print this Help
     -i        case-Insensitive search
     -l        follow Links (warning: no cycle detection)
     -t        run Tests and exit

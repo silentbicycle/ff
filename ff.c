@@ -46,6 +46,7 @@ static void usage() {
         "usage: ff [-dhilt] [-c char] [-r root] query\n"
         "-c CHAR   char to toggle Consecutive match (default: '=')\n"
         "-d        show Dotfiles\n"
+        "-h        print this Help\n"
         "-i        case-Insensitive search\n"
         "-l        follow Links\n"
         "-t        run Tests and exit\n"
