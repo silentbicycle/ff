@@ -220,9 +220,10 @@ static char *proc_args(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
+    char root_buf[FILENAME_MAX];
     char *root = proc_args(argc, argv);
-    if (root == NULL) root = getenv("HOME");
-    if (root == NULL) bail("Could not get $HOME\n");
+    if (root == NULL) root = getcwd(root_buf, FILENAME_MAX);
+    if (root == NULL) bail("Could not get current working directory.\n");
     if (query == NULL) bail("Bad query\n");
 
     bzero(pathbuf, FILENAME_MAX);

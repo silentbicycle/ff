@@ -10,7 +10,7 @@ cumbersome.
 Searching for "aeiou" will print any paths that match the RE
 `.*a.*e.*i.*o.*u.*`. 
 
-By default, `ff` searches recursively from your home directory, but its
+By default, `ff` searches recursively from the current directory, but its
 search root can be set with the `-r` option.
 
 `ff` query strings are not regular expressions - characters such as
@@ -52,4 +52,4 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
     -i        case-Insensitive search
     -l        follow Links (warning: no cycle detection)
     -t        run Tests and exit
-    -r ROOT   set search Root (default: ~)
+    -r ROOT   set search Root (default: .)
