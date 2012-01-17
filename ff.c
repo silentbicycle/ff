@@ -34,6 +34,7 @@ static char conseq_char = '=';  /* consecutive match toggle char */
 static int nocase = 0;          /* case insensitive? */
 static int links = 0;           /* follow links? */
 
+static char rootbuf[FILENAME_MAX];
 static char pathbuf[FILENAME_MAX];
 
 static char *query = NULL;
@@ -42,7 +43,7 @@ static int query_len = 0;
 static void usage() {
     fprintf(stderr,
         "fuzzy-finder, by Scott Vokes <vokes.s@gmail.com>\n"
-        "usage: ff [-dilt] [-c char] [-r root] query\n"
+        "usage: ff [-dhilt] [-c char] [-r root] query\n"
         "-c CHAR   char to toggle Consecutive match (default: '=')\n"
         "-d        show Dotfiles\n"
         "-i        case-Insensitive search\n"
@@ -174,59 +175,71 @@ static void walk(const char *path, uint po,
 
 static void run_tests();
 
-/* Process args, return root path (or NULL). */
-static char *proc_args(int argc, char **argv) {
-    uint i = 0;
-    char *root = NULL;
-    if (argc < 2) usage();
+static void set_root(const char *path) {
+    if (path == NULL) bail("Bad root path\n");
+    if (path[0] == '~') {       /* properly expand ~ */
+        const char *home = getenv("HOME");
+        if (home == NULL) bail("Failed to get $HOME\n");
 
-    for (i=1; i<argc; i++) {
-        char *arg = argv[i];
-        if (arg == NULL) continue;
-        if (arg[0] == '-') {
-            switch (arg[1]) {
-            case 'c':           /* set consecutive match char */
-                if (argc < i + 1) usage();
-                conseq_char = argv[++i][0];
-                break;
-            case 'd':
-                dotfiles = 1; break;
-            case 'h':
-                usage(); break;
-            case 'i':
-                nocase = 1; break;
-            case 'l':
-                links = 1; break;
-            case 'r':
-                if (argc < i + 2) usage();
-                root = argv[++i]; break;
-            case 't':
-                run_tests(); break;
-            case '-':
-                if (argc < i + 2) usage();
-                query = argv[++i];
-                return root;
-            default:
-                fprintf(stderr, "ff: illegal option: -- %c\n", arg[1]);
-                usage();
-            }
-        } else {
-            query = arg;
+        if (FILENAME_MAX < snprintf(rootbuf, FILENAME_MAX,
+                                    "%s/%s", home, path + 1)) {
+            bail("error: path longer than FILENAME_MAX\n");
+        }
+    } else {
+        strncpy(rootbuf, path, FILENAME_MAX);
+        rootbuf[FILENAME_MAX-1] = '\0';
+    }
+}
+
+/* Process args, return root path (or NULL). */
+static void proc_args(int argc, char **argv) {
+    uint i = 0;
+    int a = 0;
+
+    while ((a = getopt(argc, argv, "c:dhilr:t")) != -1) {
+        switch (a) {
+        case 'c':               /* set consecutive match char */
+            conseq_char = optarg[0]; break;
+        case 'd':               /* show dotfiles */
+            dotfiles = 1; break;
+        case 'h':               /* help */
+            usage(); break;
+        case 'i':               /* case-insensitive */
+            nocase = 1; break;
+        case 'l':               /* follow links */
+            links = 1; break;
+        case 'r':               /* set search root */
+            set_root(optarg);
             break;
+        case 't':               /* run tests and exit */
+            run_tests(); break;
+        default:
+            fprintf(stderr, "ff: illegal option: -- %c\n", a);
+            usage();
         }
     }
-    if (argc < i + 1) usage();
-    return root;
+
+    argc -= optind;
+    argv += optind;
+    if (argc < 1) usage();
+    query = argv[0];
 }
 
 int main(int argc, char **argv) {
-    char root_buf[FILENAME_MAX];
-    char *root = proc_args(argc, argv);
-    if (root == NULL) root = getcwd(root_buf, FILENAME_MAX);
-    if (root == NULL) bail("Could not get current working directory.\n");
+    char *root = rootbuf;
+
+    /* These are static and *should* be zeroed already. */
+    bzero(rootbuf, FILENAME_MAX);
+    bzero(pathbuf, FILENAME_MAX);
+
+    proc_args(argc, argv);
+    if (rootbuf[0] == '\0') {
+        root = getcwd(rootbuf, FILENAME_MAX);
+        if (root == NULL) bail("Could not get current working directory.\n");
+    }
+
     if (query == NULL) bail("Bad query\n");
 
-    bzero(pathbuf, FILENAME_MAX);
     query_len = strlen(query);
 
     if (nocase) {
