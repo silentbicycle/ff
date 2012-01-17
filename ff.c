@@ -48,7 +48,7 @@ static void usage() {
         "-i        case-Insensitive search\n"
         "-l        follow Links\n"
         "-t        run Tests and exit\n"
-        "-r ROOT   set search Root (default: ~)\n");
+        "-r ROOT   set search Root (default: .)\n");
     exit(EXIT_FAILURE);
 }
 
