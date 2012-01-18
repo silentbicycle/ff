@@ -33,6 +33,8 @@ static int dotfiles = 0;        /* show dotfiles? */
 static char conseq_char = '=';  /* consecutive match toggle char */
 static int nocase = 0;          /* case insensitive? */
 static int links = 0;           /* follow links? */
+static uint limit = (uint) -1;  /* max result count */
+static uint printed = 0;
 
 static char rootbuf[FILENAME_MAX];
 static char pathbuf[FILENAME_MAX];
@@ -43,12 +45,13 @@ static int query_len = 0;
 static void usage() {
     fprintf(stderr,
         "fuzzy-finder, by Scott Vokes <vokes.s@gmail.com>\n"
-        "usage: ff [-dhilt] [-c char] [-r root] query\n"
+        "usage: ff [-dhilt] [-c char] [-n count] [-r root] query\n"
         "-c CHAR   char to toggle Consecutive match (default: '=')\n"
         "-d        show Dotfiles\n"
         "-h        print this Help\n"
         "-i        case-Insensitive search\n"
         "-l        follow Links\n"
+        "-n COUNT  limit search to first N results (default: no limit)\n"
         "-t        run Tests and exit\n"
         "-r ROOT   set search Root (default: .)\n");
     exit(EXIT_FAILURE);
@@ -155,7 +158,11 @@ static void walk(const char *path, uint po,
             continue;
 
         /* Print complete matches. */
-        if (nqo == query_len) printf("%s\n", pathbuf);
+        if (nqo == query_len) {
+            printf("%s\n", pathbuf);
+            printed++;
+            if (printed >= limit) exit(EXIT_SUCCESS);
+        }
 
         if (is_dir) {
             if (query[nqo] == '/') nqo++;
@@ -197,7 +204,7 @@ static void proc_args(int argc, char **argv) {
     uint i = 0;
     int a = 0;
 
-    while ((a = getopt(argc, argv, "c:dhilr:t")) != -1) {
+    while ((a = getopt(argc, argv, "c:dhiln:r:t")) != -1) {
         switch (a) {
         case 'c':               /* set consecutive match char */
             conseq_char = optarg[0]; break;
@@ -209,6 +216,10 @@ static void proc_args(int argc, char **argv) {
             nocase = 1; break;
         case 'l':               /* follow links */
             links = 1; break;
+        case 'n':               /* limit result count */
+            limit = atol(optarg);
+            if ((signed int) limit <= 0) bail("Bad limit\n");
+            break;
         case 'r':               /* set search root */
             set_root(optarg);
             break;

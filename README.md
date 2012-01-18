@@ -46,11 +46,12 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
 
 ## Usage ##
 
-    ff [-dilt] [-c char] [-r root] query
+    ff [-dhilt] [-c char] [-n count] [-r root] query
     -c CHAR   char to toggle Consecutive match (default: '=')
     -d        show Dotfiles
     -h        print this Help
     -i        case-Insensitive search
     -l        follow Links (warning: no cycle detection)
+    -n COUNT  limit search to first N results (default: no limit)
     -t        run Tests and exit
     -r ROOT   set search Root (default: .)
