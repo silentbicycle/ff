@@ -129,7 +129,8 @@ static void walk(const char *path, uint po,
     int is_dir = 0;
 
     if (dir == NULL) {
-        fprintf(stderr, "failed to open: %s\n", path);
+        perror(path);
+        errno = 0;
         return;
     }
 
