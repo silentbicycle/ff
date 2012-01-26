@@ -46,7 +46,7 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
 
 ## Usage ##
 
-    ff [-dhilt] [-c char] [-n count] [-r root] query
+    ff [-diltR] [-c char] [-n count] [-r root] query
     -c CHAR   char to toggle Consecutive match (default: '=')
     -d        show Dotfiles
     -h        print this Help
@@ -55,3 +55,4 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
     -n COUNT  limit search to first N results (default: no limit)
     -t        run Tests and exit
     -r ROOT   set search Root (default: .)
+    -R        don't recurse subdirectories

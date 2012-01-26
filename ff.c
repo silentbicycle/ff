@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <err.h>
+#include <errno.h>
 
 static void bail(char *msg) {
     fprintf(stderr, "%s", msg);
@@ -35,6 +36,7 @@ static int nocase = 0;          /* case insensitive? */
 static int links = 0;           /* follow links? */
 static uint limit = (uint) -1;  /* max result count */
 static uint printed = 0;
+static int recurse = 1;         /* search file tree recursively? */
 
 static char rootbuf[FILENAME_MAX];
 static char pathbuf[FILENAME_MAX];
@@ -53,7 +55,8 @@ static void usage() {
         "-l        follow Links\n"
         "-n COUNT  limit search to first N results (default: no limit)\n"
         "-t        run Tests and exit\n"
-        "-r ROOT   set search Root (default: .)\n");
+        "-r ROOT   set search Root (default: .)\n"
+        "-R        don't recurse subdirectories\n");
     exit(EXIT_FAILURE);
 }
 
@@ -157,6 +160,10 @@ static void walk(const char *path, uint po,
         if (expects_dir && nqo > 0 && query[nqo] != '/' && is_dir)
             continue;
 
+        /* Check for trailing / in pattern. Do this *before*
+         * printing the path, in case the pattern ends in '/'. */
+        if (is_dir && query[nqo] == '/') nqo++;
+
         /* Print complete matches. */
         if (nqo == query_len) {
             printf("%s\n", pathbuf);
@@ -164,10 +171,8 @@ static void walk(const char *path, uint po,
             if (printed >= limit) exit(EXIT_SUCCESS);
         }
 
-        if (is_dir) {
-            if (query[nqo] == '/') nqo++;
-            walk(pathbuf, npo, nqo);
-        }
+        /* Walk subdirectories, checking from new query offset. */
+        if (is_dir && recurse) walk(pathbuf, npo, nqo);
     }
 
     if (closedir(dir) == -1) {
@@ -204,7 +209,7 @@ static void proc_args(int argc, char **argv) {
     uint i = 0;
     int a = 0;
 
-    while ((a = getopt(argc, argv, "c:dhiln:r:t")) != -1) {
+    while ((a = getopt(argc, argv, "c:dhiln:r:tR")) != -1) {
         switch (a) {
         case 'c':               /* set consecutive match char */
             conseq_char = optarg[0]; break;
@@ -225,6 +230,8 @@ static void proc_args(int argc, char **argv) {
             break;
         case 't':               /* run tests and exit */
             run_tests(); break;
+        case 'R':
+            recurse = 0; break;
         default:
             fprintf(stderr, "ff: illegal option: -- %c\n", a);
             usage();
