@@ -34,8 +34,6 @@ static int dotfiles = 0;        /* show dotfiles? */
 static char conseq_char = '=';  /* consecutive match toggle char */
 static int nocase = 0;          /* case insensitive? */
 static int links = 0;           /* follow links? */
-static uint limit = (uint) -1;  /* max result count */
-static uint printed = 0;
 static int recurse = 1;         /* search file tree recursively? */
 
 static char rootbuf[FILENAME_MAX];
@@ -53,7 +51,6 @@ static void usage() {
         "-h        print this Help\n"
         "-i        case-Insensitive search\n"
         "-l        follow Links\n"
-        "-n COUNT  limit search to first N results (default: no limit)\n"
         "-t        run Tests and exit\n"
         "-r ROOT   set search Root (default: .)\n"
         "-R        don't recurse subdirectories\n");
@@ -175,8 +172,6 @@ static void walk(const char *path, uint po,
         /* Print complete matches. */
         if (nqo == query_len) {
             printf("%s\n", pathbuf);
-            printed++;
-            if (printed >= limit) exit(EXIT_SUCCESS);
         }
 
         /* Walk subdirectories, checking from new query offset. */
@@ -217,7 +212,7 @@ static void proc_args(int argc, char **argv) {
     uint i = 0;
     int a = 0;
 
-    while ((a = getopt(argc, argv, "c:dhiln:r:tR")) != -1) {
+    while ((a = getopt(argc, argv, "c:dhilr:tR")) != -1) {
         switch (a) {
         case 'c':               /* set consecutive match char */
             conseq_char = optarg[0]; break;
@@ -229,10 +224,6 @@ static void proc_args(int argc, char **argv) {
             nocase = 1; break;
         case 'l':               /* follow links */
             links = 1; break;
-        case 'n':               /* limit result count */
-            limit = atol(optarg);
-            if ((signed int) limit <= 0) bail("Bad limit\n");
-            break;
         case 'r':               /* set search root */
             set_root(optarg);
             break;

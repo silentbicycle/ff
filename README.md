@@ -52,7 +52,6 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
     -h        print this Help
     -i        case-Insensitive search
     -l        follow Links (warning: no cycle detection)
-    -n COUNT  limit search to first N results (default: no limit)
     -t        run Tests and exit
     -r ROOT   set search Root (default: .)
     -R        don't recurse subdirectories
