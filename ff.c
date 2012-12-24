@@ -69,6 +69,13 @@ static uint put_path(uint offset, const char *elt, int dir) {
         fprintf(stderr, "snprintf error\n");
         exit(EXIT_FAILURE);
     }
+
+    /* If it ends with "//" then drop the second '/'. */
+    if (offset + res >= 2 && pathbuf[offset + res - 2] == '/') {
+        res--;
+        pathbuf[offset + res] = '\0';
+    }
+
     return res;
 }
 
