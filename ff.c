@@ -255,10 +255,6 @@ static void proc_args(int argc, char **argv) {
 int main(int argc, char **argv) {
     char *root = rootbuf;
 
-    /* These are static and *should* be zeroed already. */
-    bzero(rootbuf, FILENAME_MAX);
-    bzero(pathbuf, FILENAME_MAX);
-
     proc_args(argc, argv);
     if (rootbuf[0] == '\0') {
         root = getcwd(rootbuf, FILENAME_MAX);
