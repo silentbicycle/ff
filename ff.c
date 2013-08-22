@@ -31,6 +31,7 @@ static void bail(char *msg) {
 }
 
 static int dotfiles = 0;        /* show dotfiles? */
+static int only_dirs = 0;       /* only show directories */
 static char conseq_char = '=';  /* consecutive match toggle char */
 static int nocase = 0;          /* case insensitive? */
 static int links = 0;           /* follow links? */
@@ -48,6 +49,7 @@ static void usage() {
         "usage: ff [-dhiltR] [-c char] [-n count] [-r root] query\n"
         "-c CHAR   char to toggle Consecutive match (default: '=')\n"
         "-d        show Dotfiles\n"
+        "-D        only show directories\n"
         "-h        print this Help\n"
         "-i        case-Insensitive search\n"
         "-l        follow Links\n"
@@ -171,7 +173,9 @@ static void walk(const char *path, uint po,
 
         /* Print complete matches. */
         if (nqo == query_len) {
-            printf("%s\n", pathbuf);
+            if (!only_dirs || is_dir) {
+              printf("%s\n", pathbuf);
+            }
         }
 
         /* Walk subdirectories, checking from new query offset. */
@@ -212,12 +216,14 @@ static void proc_args(int argc, char **argv) {
     uint i = 0;
     int a = 0;
 
-    while ((a = getopt(argc, argv, "c:dhilr:tR")) != -1) {
+    while ((a = getopt(argc, argv, "c:dDhilr:tR")) != -1) {
         switch (a) {
         case 'c':               /* set consecutive match char */
             conseq_char = optarg[0]; break;
         case 'd':               /* show dotfiles */
             dotfiles = 1; break;
+        case 'D':               /* only print directories */
+            only_dirs = 1; break;
         case 'h':               /* help */
             usage(); break;
         case 'i':               /* case-insensitive */
