@@ -266,6 +266,8 @@ int main(int argc, char **argv) {
         int i;
         for (i=0; i<query_len; i++) query[i] = tolower(query[i]);
     }
+
+    setlinebuf(stdout);
     
     walk(root, put_path(0, root, 1), 0);
     return 0;
