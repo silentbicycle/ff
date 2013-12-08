@@ -1,12 +1,3 @@
-.de EX
-.nf
-.ft CW
-..
-.de EE
-.br
-.fi
-.ft 1
-..
 .TH FF 1
 .CT 1 files prog_other
 .SH NAME
@@ -34,23 +25,23 @@ ff \- fuzzy-find: fuzzy completion for finding files
 searches a directory tree with basic
 .I fuzzy-completion.
 I wrote it because
-.I `find -name "blah"`
+.BI "find \-name \'blah\'"
 only scans filenames (not their parent directories), and
 regular expressions for fuzzy completion are cumbersome.
 
 Searching for
 .I "aeiou"
 will print any paths that match the re
-.I ".*a.*e.*i.*o.*u.*"
+.BI '.*a.*e.*i.*o.*u.*'.
 
 By default,
 .I ff
 searches recursively from the current directory, but its
 search root can be set with the
-.I `-r`
+.I '-r'
 option.
 
-.I `ff`
+.BI ff
 query query strings are not regular expressions - characters such as
 .I '.'
 and
@@ -61,10 +52,8 @@ will be required to match within the same path element, and the
 consecutive match character (default
 .I '='
 ) toggles exact matching.
-(The default is
-.I '='
-because it doesn't mean anything in basic REs and it's
-usually unshifted on keyboards.)
+(The default is '=' because it doesn't mean anything in
+basic REs and it's usually unshifted on keyboards.)
 
 .SH OPTIONS
 .TP
@@ -110,28 +99,36 @@ run
 and exit
 
 .SH EXAMPLES
-
-.I `ff aeiou`
-matches both
-.I `~/and/the/first/one/used.txt`
+.TP
+.EX
+ff aeiou
+.EE
+This matches both
+.BI '~/and/the/first/one/used.txt'
 and
-.I `~/after_the_furious_ultimatum.txt`,
+.BI '~/after_the_furious_ultimatum.txt',
 because the characters 'a', 'e', 'i', 'o', and 'u' appear sequentially.
 
-.I `ff a/e/i/o/u`
-only matches
-.I `~/and/the/first/one/used.txt`,
+.TP
+.EX
+ff a/e/i/o/u
+.EE
+This only matches
+.BI '~/and/the/first/one/used.txt',
 since the
-.I `/`s
+.I '/'s
 require each vowel to appear in distinct directory elements.
 
-.I `ff ae=iou=`
-would only match
-.I `~/after_the_furious_ultimatum.txt`,
-since it matches an 'a', then an 'e', then the `=`s specify a 
+.TP
+.EX
+ff ae=iou=
+.EE
+This would only match
+.I '~/after_the_furious_ultimatum.txt',
+since it matches an 'a', then an 'e', then the '='s specify a 
 .B consecutive
 "iou" string. (The second '=' toggles off the consecutive match,
-but is optional since it is at the end of the pattern.)
+but is optional here since it is at the end of the pattern.)
 
 .SH SEE ALSO
 .IR find (1)
