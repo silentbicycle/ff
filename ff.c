@@ -25,6 +25,8 @@
 #include <err.h>
 #include <errno.h>
 
+#define FF_VERSION "0.6.0"
+
 static void bail(char *msg) {
     fprintf(stderr, "%s", msg);
     exit(EXIT_FAILURE);
@@ -45,7 +47,7 @@ static int query_len = 0;
 
 static void usage() {
     fprintf(stderr,
-        "fuzzy-finder, by Scott Vokes <vokes.s@gmail.com>\n"
+        "fuzzy-finder v. %s, by Scott Vokes <vokes.s@gmail.com>\n"
         "usage: ff [-dhiltR] [-c char] [-n count] [-r root] query\n"
         "-c CHAR   char to toggle Consecutive match (default: '=')\n"
         "-d        show Dotfiles\n"
@@ -55,7 +57,7 @@ static void usage() {
         "-l        follow Links\n"
         "-t        run Tests and exit\n"
         "-r ROOT   set search Root (default: .)\n"
-        "-R        don't recurse subdirectories\n");
+        "-R        don't recurse subdirectories\n", FF_VERSION);
     exit(EXIT_FAILURE);
 }
 
@@ -270,7 +272,7 @@ int main(int argc, char **argv) {
     setlinebuf(stdout);
     
     walk(root, put_path(0, root, 1), 0);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
