@@ -1,7 +1,7 @@
 # fuzzy-find: fuzzy completion for finding files #
 
 `ff` searches a directory tree with basic [fuzzy-completion][fc]. I wrote it
-because `find -name "blah"` only scans filename (not their parent 
+because `find -name "blah"` only scans filenames (not their parent 
 directories), and regular expressions for fuzzy completion are
 cumbersome.
 
