@@ -56,3 +56,7 @@ it matches an 'a', then an 'e', then the `=`s specify a *consecutive* "iou" stri
     -t        run Tests and exit
     -r ROOT   set search Root (default: .)
     -R        don't recurse subdirectories
+
+# Build Status
+
+  [![Build Status](https://travis-ci.org/silentbicycle/ff.png)](http://travis-ci.org/silentbicycle/ff)
