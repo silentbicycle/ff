@@ -6,4 +6,4 @@ compiler:
 
 install: make
 
-script: ./ff
+script: ./ff -d travis
